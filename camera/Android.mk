@@ -41,7 +41,6 @@ LOCAL_CFLAGS+= -DUSE_NEON_CONVERSION
 LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 LOCAL_C_INCLUDES += \
-     $(TARGET_OUT_HEADERS)/mm-still/mm-omx \
      hardware/qcom/display-$(TARGET_QCOM_DISPLAY_VARIANT)/libgralloc \
      hardware/qcom/media-$(TARGET_QCOM_MEDIA_VARIANT)/libstagefrighthw \
      hardware/qcom/media-$(TARGET_QCOM_MEDIA_VARIANT)/mm-core/inc \
@@ -54,10 +53,7 @@ LOCAL_SHARED_LIBRARIES := \
     libcutils \
     liblog \
     libui \
-    libutils \
-    libmmjpeg \
-    libimage-jpeg-enc-omx-comp \
-    libmmstillomx
+    libutils
  
 LOCAL_SHARED_LIBRARIES += libmmcamera_interface2
 
@@ -71,13 +67,6 @@ ifeq ($(DLOPEN_LIBMMCAMERA),1)
 else
     LOCAL_SHARED_LIBRARIES += liboemcamera
 endif
-
-$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libmmjpeg_intermediates/)
-$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libmmjpeg_intermediates/export_includes)
-$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libimage-jpeg-enc-omx-comp_intermediates/)
-$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libimage-jpeg-enc-omx-comp_intermediates/export_includes)
-$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libmmstillomx_intermediates/)
-$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libmmstillomx_intermediates/export_includes)
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
