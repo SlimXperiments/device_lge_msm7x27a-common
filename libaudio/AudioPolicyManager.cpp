@@ -1604,7 +1604,7 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
                 device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_BLUETOOTH_A2DP_SPEAKER;
                 if (device) break;
             }
-            if (mPhoneState != AudioSystem::MODE_IN_CALL) {
+            if (mPhoneState != AudioSystem::MODE_IN_CALL && mPhoneState != AudioSystem::MODE_IN_COMMUNICATION) {
                 device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_USB_ACCESSORY;
                 if (device) break;
                 device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_USB_DEVICE;
@@ -1613,9 +1613,9 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
                 if (device) break;
                 device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_AUX_DIGITAL;
                 if (device) break;
+                device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET;
+                if (device) break;
             }
-            device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_ANLG_DOCK_HEADSET;
-            if (device) break;
             device = mAvailableOutputDevices & AUDIO_DEVICE_OUT_SPEAKER;
             if (device) break;
             device = mDefaultOutputDevice;
