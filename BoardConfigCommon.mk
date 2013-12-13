@@ -57,6 +57,9 @@ TARGET_QCOM_MEDIA_VARIANT := caf
 # Add QC Video Enhancements flag
 TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
 
+# we submit only one buffer at a time
+TARGET_USE_ONE_INPUT_BUFFER := true
+
 # bluetooth
 BOARD_HAVE_BLUETOOTH := true
 
