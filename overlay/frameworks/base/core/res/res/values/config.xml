@@ -23,6 +23,8 @@
 
     <bool name="config_animateScreenLights">true</bool>
 
+    <bool name="config_enableLockScreenRotation">true</bool>
+
     <!-- The default iface on which to monitor data use -->
     <string name="config_datause_iface">rmnet0</string>
 
