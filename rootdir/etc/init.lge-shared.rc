@@ -338,12 +338,9 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-## LGE_CHANGE_S, U0-SENSOR [seven.kim@lge.com] 2011-09-96
-# compass/accelerometer daemon for U0
 service sensord /system/bin/sensord
-   class core
-   oneshot
-## LGE_CHANGE_E
+    class core
+    oneshot
 
 # Triggered by the KEY_VOLUME_DOWN+KEY_MENU keycodes
 service bugreport /system/bin/logwrapper /system/bin/dumpstate -d -v -o /storage/sdcard0/bugreports/bugreport
