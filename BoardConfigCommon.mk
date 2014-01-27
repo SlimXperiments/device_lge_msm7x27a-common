@@ -82,6 +82,8 @@ BOARD_USE_LEGACY_SENSORS_FUSION := false
 
 TARGET_FORCE_CPU_UPLOAD := true
 
+USE_DEVICE_SPECIFIC_CAMERA := true
+
 BOARD_HAS_QCOM_WLAN := true
 BOARD_WLAN_DEVICE := qcwcn
 WIFI_EXT_MODULE_PATH := /system/lib/modules/librasdioif.ko

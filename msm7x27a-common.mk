@@ -92,6 +92,7 @@ PRODUCT_COPY_FILES += \
 # Gps hal
 PRODUCT_PACKAGES += \
     gps.msm7x27a \
+    librpc \
     gps.conf
 
 PRODUCT_PACKAGES += \

@@ -1,8 +1,8 @@
-ifneq ($(USE_CAMERA_STUB),true)
-ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
-ifneq ($(BUILD_TINY_ANDROID),true)
-
 LOCAL_PATH := $(call my-dir)
+
+ifneq ($(USE_CAMERA_STUB),true)
+ifneq ($(BUILD_TINY_ANDROID),true)
+ifeq ($(USE_DEVICE_SPECIFIC_CAMERA),true)
 
 include $(CLEAR_VARS)
 
@@ -84,7 +84,7 @@ LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
 endif # BUILD_TINY_ANDROID
-endif # BOARD_USES_QCOM_HARDWARE
 endif # USE_CAMERA_STUB
+endif # USE_DEVICE_SPECIFIC_CAMERA
 
 include $(LOCAL_PATH)/mm-camera-interface/Android.mk
