@@ -80,8 +80,6 @@
         <item>"7,1"</item>
     </string-array>
 
-    <bool name="config_disableMenuKeyInLockScreen">true</bool>
-
     <bool name="config_automatic_brightness_available">false</bool>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
