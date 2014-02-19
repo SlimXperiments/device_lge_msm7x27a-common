@@ -808,6 +808,9 @@ private:
     friend class QCameraStream_Snapshot;
     friend class QCameraStream_Rdi;
 
+    android :: FPSRange* mSupportedFpsRanges;
+    int mSupportedFpsRangesCount;
+
     camera_size_type* mPictureSizes;
     camera_size_type* mPreviewSizes;
     camera_size_type* mVideoSizes;
@@ -850,8 +853,6 @@ private:
      exif_values_t          mExifValues;                        //Exif values in usable format
      int                    mExifTableNumEntries;            //NUmber of entries in mExifData
      int                 mNoDisplayMode;
-     android :: FPSRange* mSupportedFpsRanges;
-     int mSupportedFpsRangesCount;
      uint32_t            mChannelInterfaceMask;
 
      /* Used to show the process state of snapshot_jpeg_cb*/

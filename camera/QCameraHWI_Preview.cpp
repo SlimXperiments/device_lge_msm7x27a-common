@@ -899,7 +899,7 @@ status_t QCameraStream_preview::processPreviewFrameWithDisplay(
   mHalCamCtrl->mPreviewMemoryLock.lock();
   mNotifyBuffer[frame->def.idx] = *frame;
 
-  ALOGV("Enqueue buf handle %p\n",
+  ALOGI("Enqueue buf handle %p\n",
   mHalCamCtrl->mPreviewMemory.buffer_handle[frame->def.idx]);
 
 #ifdef USE_ION
@@ -958,7 +958,7 @@ status_t QCameraStream_preview::processPreviewFrameWithDisplay(
   if(err != 0) {
     ALOGE("%s: enqueue_buffer failed, err = %d", __func__, err);
   } else {
-   ALOGV("%s: enqueue_buffer hdl=%p", __func__, *mHalCamCtrl->mPreviewMemory.buffer_handle[frame->def.idx]);
+   ALOGD("%s: enqueue_buffer hdl=%p", __func__, *mHalCamCtrl->mPreviewMemory.buffer_handle[frame->def.idx]);
     mHalCamCtrl->mPreviewMemory.local_flag[frame->def.idx] = BUFFER_NOT_OWNED;
   }
   buffer_handle_t *buffer_handle = NULL;
@@ -967,7 +967,7 @@ status_t QCameraStream_preview::processPreviewFrameWithDisplay(
               &buffer_handle, &tmp_stride);
   if (err == NO_ERROR && buffer_handle != NULL) {
 
-    ALOGV("%s: dequed buf hdl =%p", __func__, *buffer_handle);
+    ALOGD("%s: dequed buf hdl =%p", __func__, *buffer_handle);
     for(i = 0; i < mHalCamCtrl->mPreviewMemory.buffer_count; i++) {
         if(mHalCamCtrl->mPreviewMemory.buffer_handle[i] == buffer_handle) {
           mHalCamCtrl->mPreviewMemory.local_flag[i] = BUFFER_OWNED;
@@ -1434,8 +1434,8 @@ end:
     (void)cam_evt_register_buf_notify(mCameraId, MM_CAMERA_CH_PREVIEW,
                                       NULL,
                                       (mm_camera_register_buf_cb_type_t)NULL,
-                                      0,
-                                      (void*)NULL);
+                                      NULL,
+                                      NULL);
 
     mInit = false;
     ALOGD("%s: END", __func__);

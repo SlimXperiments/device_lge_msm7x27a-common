@@ -162,58 +162,62 @@ QCameraHardwareInterface(int cameraId, int mode)
                     mCallbackCookie(0),
                     //mPreviewHeap(0),
                     mStreamDisplay (NULL), mStreamRecord(NULL), mStreamSnap(NULL),
-                    mStreamLiveSnap(NULL),
-    mPreviewFormat(CAMERA_YUV_420_NV21),
+                    mStreamRdi(NULL),
                     mFps(0),
                     mDebugFps(0),
-    mBrightness(0),
-    mContrast(0),
-    mBestShotMode(0),
-    mEffects(0),
-    mSkinToneEnhancement(0),
-    mDenoiseValue(0),
-                    mHJR(0),
-                    mRotation(0),
-    mMaxZoom(0),
+                    mMaxZoom(0),
                     mCurrentZoom(0),
                     mSupportedPictureSizesCount(15),
-    mFaceDetectOn(0),
                     mDumpFrmCnt(0), mDumpSkipCnt(0),
-    mFocusMode(AF_MODE_MAX),
                     mPictureSizeCount(15),
                     mPreviewSizeCount(13),
                     mVideoSizeCount(0),
                     mAutoFocusRunning(false),
                     mHasAutoFocusSupport(false),
                     mInitialized(false),
-    mDisEnabled(0),
                     mIs3DModeOn(0),
                     mSmoothZoomRunning(false),
                     mParamStringInitialized(false),
+                    mFaceDetectOn(0),
+                    mDisEnabled(0),
                     mZoomSupported(false),
                     mFullLiveshotEnabled(true),
                     mRecordingHint(false),
                     mAppRecordingHint(false),
-    mStartRecording(0),
-    mReleasedRecordingFrame(false),
-    mHdrMode(HDR_BRACKETING_OFF),
-    mSnapshotFormat(0),
-    mZslInterval(1),
-    mRestartPreview(false),
                     mStatsOn(0), mCurrentHisto(-1), mSendData(false), mStatHeap(NULL),
                     mZslLookBackMode(0),
                     mZslLookBackValue(0),
                     mZslEmptyQueueFlag(FALSE),
-
                     mPictureSizes(NULL),
                     mVideoSizes(NULL),
-    mCameraState(CAMERA_STATE_UNINITED),
-    mPostPreviewHeap(NULL),
-    mExifTableNumEntries(0),
+                    mCameraState(CAMERA_STATE_UNINITED),
+                    mPostPreviewHeap(NULL),
+                    mHdrMode(HDR_BRACKETING_OFF),
+                    mStreamLiveSnap(NULL),
+                    mExifTableNumEntries(0),
+                    mDenoiseValue(0),
+                    mSnapshotFormat(0),
+                    mStartRecording(0),
+                    mZslInterval(1),
                     mNoDisplayMode(0),
-    mSupportedFpsRanges(NULL),
-    mSupportedFpsRangesCount(0),
-    mPowerModule(0)
+                    mBrightness(0),
+                    mContrast(0),
+                    mEffects(0),
+                    mBestShotMode(0),
+                    mHJR(0),
+                    mSkinToneEnhancement(0),
+                    mRotation(0),
+                    mFocusMode(AF_MODE_MAX),
+                    mPreviewFormat(CAMERA_YUV_420_NV21),
+                    mRestartPreview(false),
+                    mReleasedRecordingFrame(false),
+                    mStateLiveshot(false),
+                    mSupportedFpsRanges(NULL),
+                    mSupportedFpsRangesCount(0),
+                    mPowerModule(0),
+                    mChannelInterfaceMask(STREAM_IMAGE),
+                    mSnapJpegCbRunning(false),
+                    mSnapCbDisabled(false)
 {
     ALOGI("QCameraHardwareInterface: E");
     int32_t result = MM_CAMERA_E_GENERAL;
@@ -387,12 +391,6 @@ QCameraHardwareInterface::~QCameraHardwareInterface()
     if (mStreamRdi){
         QCameraStream_Rdi::deleteInstance (mStreamRdi);
         mStreamRdi = NULL;
-    }
-
-    //Deallocate histogram stats buffer
-    if (mStatsOn) {
-        ALOGI("%s Deallocate histogram stats buffer", __func__);
-        setHistogram(0);
     }
 
     /* Now close the camera after deleting all the instances */
@@ -2585,7 +2583,7 @@ int QCameraHardwareInterface::initHeapMem( QCameraHalHeap_t *heap,
 {
     int rc = 0;
     int i;
-    int path = -1;
+    int path;
     struct msm_frame *frame;
     ALOGI("Init Heap =%p. stream_buf =%p, pmem_type =%d, num_of_buf=%d. buf_len=%d, cbcr_off=%d",
          heap, StreamBuf, pmem_type, num_of_buf, buf_len, cbcr_off);

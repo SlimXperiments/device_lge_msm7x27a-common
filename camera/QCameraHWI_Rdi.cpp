@@ -568,9 +568,8 @@ end:
     (void)cam_evt_register_buf_notify(mCameraId, MM_CAMERA_CH_RDI,
                                       NULL,
                                       (mm_camera_register_buf_cb_type_t)NULL,
-                                      0,
-                                      (void*)NULL);
-
+                                      NULL,
+                                      NULL);
     mInit = false;
     ALOGD("%s: END", __func__);
 

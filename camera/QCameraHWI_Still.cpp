@@ -605,7 +605,7 @@ deinitSnapshotChannel(mm_camera_channel_type_t ch_type)
     /* unreg buf notify*/
     if (getSnapshotState() >= SNAPSHOT_STATE_BUF_NOTIF_REGD){
         if (NO_ERROR != cam_evt_register_buf_notify(mCameraId,
-                        ch_type, NULL,(mm_camera_register_buf_cb_type_t)NULL,0, this)) {
+                        ch_type, NULL,(mm_camera_register_buf_cb_type_t)NULL,NULL, this)) {
             ALOGE("%s: Failure to unregister buf notification", __func__);
         }
     }
@@ -876,11 +876,11 @@ deinitSnapshotBuffers(void)
             if(ret != NO_ERROR) {
                 ALOGE("%s:unreg snapshot buf err=%d\n", __func__, ret);
                 ret = FAILED_TRANSACTION;
+                goto end;
             }
         }
 
         /* Clear main and thumbnail heap*/
-        ALOGE("%s: Clear main and thumbnail heap",__func__);
         if(!isLiveSnapshot()) {
             mHalCamCtrl->releaseHeapMem(&mHalCamCtrl->mSnapshotMemory);
             if (!isFullSizeLiveshot())
@@ -2378,9 +2378,8 @@ void QCameraStream_Snapshot::stop(void)
         (void)cam_evt_register_buf_notify(mCameraId, MM_CAMERA_CH_RAW,
                                             NULL,
                                             (mm_camera_register_buf_cb_type_t)NULL,
-                                            0,
-                                            (void*)NULL);
-
+                                            NULL,
+                                            NULL);
     } else {
         // Channel will be freed during release if buffers are not freed yet.
         if(!mFreeSnapshotBufAfterDataCb) {
@@ -2392,8 +2391,8 @@ void QCameraStream_Snapshot::stop(void)
         (void)cam_evt_register_buf_notify(mCameraId, MM_CAMERA_CH_SNAPSHOT,
                                             NULL,
                                             (mm_camera_register_buf_cb_type_t)NULL,
-                                            0,
-                                            (void*)NULL);
+                                            NULL,
+                                            NULL);
     }
 
     /* release is generally called in case of explicit call from
