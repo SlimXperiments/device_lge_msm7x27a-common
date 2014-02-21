@@ -96,6 +96,9 @@ PRODUCT_PACKAGES += \
     gps.conf
 
 PRODUCT_PACKAGES += \
+    power.msm7x27a
+
+PRODUCT_PACKAGES += \
     camera.msm7x27a
 
 # Filesystem management tools
