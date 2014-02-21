@@ -30,8 +30,8 @@ target=`getprop ro.board.platform`
 case "$target" in
     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7x27a"  | "msm7627_surf" | \
     "qsd8250_surf" | "qsd8250_ffa" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "qsd8650a_st1x")
-        echo "smartassH3" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+        echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+#        echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
         ;;
 esac
 
@@ -49,9 +49,24 @@ case "$target" in
 esac
 
 case "$target" in
-     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627_surf" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "msm7x27a" )
+     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627_surf" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
         echo 245760 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         ;;
+
+     "msm7x27a")
+        # start with default minimum for this family.
+        echo 245760 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq;
+        available_frequencies=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies`
+        for freq in $available_frequencies
+           do
+              # Set this freq as minimum if available.
+              if [[ $freq = "196608" ]]; then
+                 echo 196608 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq;
+              fi
+           done
+        ;;
+
+
 esac
 
 case "$target" in
@@ -77,14 +92,14 @@ case "$target" in
      echo 4 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
      echo 384000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
      echo 384000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-     chown system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-     chown system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-     chown system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-     chown system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-     chown root.system /sys/devices/system/cpu/mfreq
-     chmod 220 /sys/devices/system/cpu/mfreq
-     chown root.system /sys/devices/system/cpu/cpu1/online
-     chmod 664 /sys/devices/system/cpu/cpu1/online
+     chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+     chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+     chown -h system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+     chown -h system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+     chown -h root.system /sys/devices/system/cpu/mfreq
+     chmod -h 220 /sys/devices/system/cpu/mfreq
+     chown -h root.system /sys/devices/system/cpu/cpu1/online
+     chmod -h 664 /sys/devices/system/cpu/cpu1/online
         ;;
 esac
 
@@ -129,30 +144,30 @@ case "$target" in
          echo 918000 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
          echo 1026000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
          echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
-         chown system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-         chown system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-         chown system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+         chown -h system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+         chown -h system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+         chown -h system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
          echo 384000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
          echo 384000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
          echo 384000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
          echo 384000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-         chown system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-         chown system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-         chown system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-         chown system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-         chown system /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-         chown system /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-         chown system /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-         chown system /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+         chown -h system /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+         chown -h system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+         chown -h system /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+         chown -h system /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+         chown -h system /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+         chown -h system /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
 	 echo 1 > /sys/module/msm_thermal/core_control/enabled
-         chown root.system /sys/devices/system/cpu/mfreq
-         chmod 220 /sys/devices/system/cpu/mfreq
-         chown root.system /sys/devices/system/cpu/cpu1/online
-         chown root.system /sys/devices/system/cpu/cpu2/online
-         chown root.system /sys/devices/system/cpu/cpu3/online
-         chmod 664 /sys/devices/system/cpu/cpu1/online
-         chmod 664 /sys/devices/system/cpu/cpu2/online
-         chmod 664 /sys/devices/system/cpu/cpu3/online
+         chown -h root.system /sys/devices/system/cpu/mfreq
+         chmod -h 220 /sys/devices/system/cpu/mfreq
+         chown -h root.system /sys/devices/system/cpu/cpu1/online
+         chown -h root.system /sys/devices/system/cpu/cpu2/online
+         chown -h root.system /sys/devices/system/cpu/cpu3/online
+         chmod -h 664 /sys/devices/system/cpu/cpu1/online
+         chmod -h 664 /sys/devices/system/cpu/cpu2/online
+         chmod -h 664 /sys/devices/system/cpu/cpu3/online
          # set DCVS parameters for CPU
          echo 40000 > /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
          echo 40000 > /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
@@ -195,14 +210,14 @@ case "$target" in
          echo 85 > /sys/module/msm_mpdecision/mp_em_rounding_point_max
          echo 50 > /sys/module/msm_mpdecision/iowait_threshold_pct
          #set permissions for the nodes needed by display on/off hook
-         chown system /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
-         chown system /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
-         chown system /sys/module/msm_mpdecision/slack_time_max_us
-         chown system /sys/module/msm_mpdecision/slack_time_min_us
-         chmod 664 /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
-         chmod 664 /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
-         chmod 664 /sys/module/msm_mpdecision/slack_time_max_us
-         chmod 664 /sys/module/msm_mpdecision/slack_time_min_us
+         chown -h system /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
+         chown -h system /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
+         chown -h system /sys/module/msm_mpdecision/slack_time_max_us
+         chown -h system /sys/module/msm_mpdecision/slack_time_min_us
+         chmod -h 664 /sys/module/msm_dcvs/cores/cpu0/slack_time_max_us
+         chmod -h 664 /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
+         chmod -h 664 /sys/module/msm_mpdecision/slack_time_max_us
+         chmod -h 664 /sys/module/msm_mpdecision/slack_time_min_us
          soc_id=`cat /sys/devices/system/soc/soc0/id`
          case "$soc_id" in
              "130")
@@ -225,16 +240,16 @@ case "$target" in
                  echo "out" > /sys/class/gpio/gpio257/direction
                  echo "out" > /sys/class/gpio/gpio258/direction
                  echo "out" > /sys/class/gpio/gpio259/direction
-                 chown media /sys/class/gpio/gpio253/value
-                 chown media /sys/class/gpio/gpio254/value
-                 chown media /sys/class/gpio/gpio257/value
-                 chown media /sys/class/gpio/gpio258/value
-                 chown media /sys/class/gpio/gpio259/value
-                 chown media /sys/class/gpio/gpio253/direction
-                 chown media /sys/class/gpio/gpio254/direction
-                 chown media /sys/class/gpio/gpio257/direction
-                 chown media /sys/class/gpio/gpio258/direction
-                 chown media /sys/class/gpio/gpio259/direction
+                 chown -h media /sys/class/gpio/gpio253/value
+                 chown -h media /sys/class/gpio/gpio254/value
+                 chown -h media /sys/class/gpio/gpio257/value
+                 chown -h media /sys/class/gpio/gpio258/value
+                 chown -h media /sys/class/gpio/gpio259/value
+                 chown -h media /sys/class/gpio/gpio253/direction
+                 chown -h media /sys/class/gpio/gpio254/direction
+                 chown -h media /sys/class/gpio/gpio257/direction
+                 chown -h media /sys/class/gpio/gpio258/direction
+                 chown -h media /sys/class/gpio/gpio259/direction
                  echo 0 > /sys/module/rpm_resources/enable_low_power/vdd_dig
                  echo 0 > /sys/module/rpm_resources/enable_low_power/vdd_mem
                  ;;
@@ -274,16 +289,16 @@ case "$target" in
         echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
         echo 300000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
         echo 300000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-        chown system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-        chown system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-        chown root.system /sys/devices/system/cpu/mfreq
-        chmod 220 /sys/devices/system/cpu/mfreq
-        chown root.system /sys/devices/system/cpu/cpu1/online
-        chown root.system /sys/devices/system/cpu/cpu2/online
-        chown root.system /sys/devices/system/cpu/cpu3/online
-        chmod 664 /sys/devices/system/cpu/cpu1/online
-        chmod 664 /sys/devices/system/cpu/cpu2/online
-        chmod 664 /sys/devices/system/cpu/cpu3/online
+        chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+        chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        chown -h root.system /sys/devices/system/cpu/mfreq
+        chmod -h 220 /sys/devices/system/cpu/mfreq
+        chown -h root.system /sys/devices/system/cpu/cpu1/online
+        chown -h root.system /sys/devices/system/cpu/cpu2/online
+        chown -h root.system /sys/devices/system/cpu/cpu3/online
+        chmod -h 664 /sys/devices/system/cpu/cpu1/online
+        chmod -h 664 /sys/devices/system/cpu/cpu2/online
+        chmod -h 664 /sys/devices/system/cpu/cpu3/online
     ;;
 esac
 
@@ -328,15 +343,29 @@ case "$target" in
         ;;
 esac
 
+# Enable Power modes and set the CPU Freq Sampling rates
+case "$target" in
+     "msm7x27a")
+        start qosmgrd
+	echo 1 > /sys/module/pm2/modes/cpu0/standalone_power_collapse/idle_enabled
+	echo 1 > /sys/module/pm2/modes/cpu1/standalone_power_collapse/idle_enabled
+	echo 1 > /sys/module/pm2/modes/cpu2/standalone_power_collapse/idle_enabled
+	echo 1 > /sys/module/pm2/modes/cpu3/standalone_power_collapse/idle_enabled
+	echo 1 > /sys/module/pm2/modes/cpu0/standalone_power_collapse/suspend_enabled
+	echo 1 > /sys/module/pm2/modes/cpu1/standalone_power_collapse/suspend_enabled
+	echo 1 > /sys/module/pm2/modes/cpu2/standalone_power_collapse/suspend_enabled
+	echo 1 > /sys/module/pm2/modes/cpu3/standalone_power_collapse/suspend_enabled
+	#SuspendPC:
+	echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/suspend_enabled
+	#IdlePC:
+	echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/idle_enabled
+#	echo 25000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    ;;
+esac
+
 # Post-setup services
 case "$target" in
     "msm8660" | "msm8960" | "msm8974")
-	rm /data/mpdecision/power_collapse
-	rm /data/mpdecision/standalone_power_collapse
-	rm -rf /data/mpdecision
-	mkdir -p /data/mpdecision
-	chown root.system /data/mpdecision
-	chmod 0770 /data/mpdecision
         start mpdecision
     ;;
     "msm7x27a")
@@ -349,27 +378,31 @@ case "$target" in
     ;;
 esac
 
-# Enable Power modes and set the CPU Freq Sampling rates
 case "$target" in
-     "msm7x27a")
-        start qosmgrd
-    echo 1 > /sys/module/pm2/modes/cpu0/standalone_power_collapse/idle_enabled
-    echo 1 > /sys/module/pm2/modes/cpu1/standalone_power_collapse/idle_enabled
-    echo 1 > /sys/module/pm2/modes/cpu0/standalone_power_collapse/suspend_enabled
-    echo 1 > /sys/module/pm2/modes/cpu1/standalone_power_collapse/suspend_enabled
-    #SuspendPC:
-    echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/suspend_enabled
-    #IdlePC:
-    echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/idle_enabled
-    echo 25000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    "msm7x27a")
+        soc_id=`cat /sys/devices/system/soc/soc0/id`
+        ver=`cat /sys/devices/system/soc/soc0/version`
+        case "$soc_id" in
+            "127" | "128" | "129" | "137" | "167" )
+                if [ "$ver" = "2.0" ]; then
+                        start thermald
+                fi
+        ;;
+        esac
+        case "$soc_id" in
+            "168" | "169" | "170" )
+                start thermald
+	;;
+	esac
     ;;
 esac
 
 # Change adj level and min_free_kbytes setting for lowmemory killer to kick in
 case "$target" in
      "msm7x27a")
-    echo 0,1,2,4,9,12 > /sys/module/lowmemorykiller/parameters/adj
-    echo 5120 > /proc/sys/vm/min_free_kbytes
+	echo 0,1,2,4,6,7 > /sys/module/lowmemorykiller/parameters/adj
+	echo 4075,5437,6799,8847,11520,15360 > /sys/module/lowmemorykiller/parameters/minfree
+	echo 5120 > /proc/sys/vm/min_free_kbytes
      ;;
 esac
 
@@ -391,5 +424,5 @@ esac
 
 #fastrpc permission setting
 insmod /system/lib/modules/adsprpc.ko
-chown system.system /dev/adsprpc-smd
-chmod 666 /dev/adsprpc-smd
+chown -h system.system /dev/adsprpc-smd
+chmod -h 666 /dev/adsprpc-smd
