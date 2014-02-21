@@ -15,6 +15,7 @@
  */
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -30,6 +31,13 @@
 #define BOOSTPULSE_INTERACTIVE "/sys/devices/system/cpu/cpufreq/interactive/boostpulse"
 #define BOOSTPULSE_SMARTASS2 "/sys/devices/system/cpu/cpufreq/smartass/boost_pulse"
 #define BOOSTPULSE_SMARTASSH3 "/sys/devices/system/cpu/cpufreq/smartassH3/boost_pulse"
+#define CPUFREQ_CPU0 "/sys/devices/system/cpu/cpu0/cpufreq/"
+
+#define MAX_FREQ_NUMBER 10
+#define NOM_FREQ_INDEX 2
+
+static char *freq_list[MAX_FREQ_NUMBER];
+static char *max_freq, *nom_freq;
 
 struct lge_power_module {
     struct power_module base;
@@ -37,6 +45,27 @@ struct lge_power_module {
     int boostpulse_fd;
     int boostpulse_warned;
 };
+
+static int str_to_tokens(char *str, char **token, int max_token_idx)
+{
+    char *pos, *start_pos = str;
+    char *token_pos;
+    int token_idx = 0;
+
+    if (!str || !token || !max_token_idx) {
+        return 0;
+    }
+
+    do {
+        token_pos = strtok_r(start_pos, " \t\r\n", &pos);
+
+        if (token_pos)
+            token[token_idx++] = strdup(token_pos);
+        start_pos = NULL;
+    } while (token_pos && token_idx < max_token_idx);
+
+    return token_idx;
+}
 
 static char governor[20];
 
@@ -114,6 +143,31 @@ static void lge_power_set_interactive(struct power_module *module, int on)
 
 static void configure_governor()
 {
+    int tmp;
+    char freq_buf[MAX_FREQ_NUMBER*10];
+    static int freq_num;
+
+    tmp = sysfs_read(CPUFREQ_CPU0 "scaling_available_frequencies",
+                                                   freq_buf, sizeof(freq_buf));
+    if (tmp <= 0) {
+        return;
+    }
+
+    freq_num = str_to_tokens(freq_buf, freq_list, MAX_FREQ_NUMBER);
+
+    /* Discard trailing empties */
+    while (!atoi(freq_list[freq_num - 1]) && freq_num) {
+        freq_num--;
+    }
+
+    if (!freq_num) {
+        return;
+    }
+
+    max_freq = freq_list[freq_num - 1];
+    tmp = (NOM_FREQ_INDEX > freq_num) ? freq_num : NOM_FREQ_INDEX;
+    nom_freq = freq_list[tmp - 1];
+
     lge_power_set_interactive(NULL, 1);
 
     if (strncmp(governor, "ondemand", 8) == 0) {
@@ -121,14 +175,14 @@ static void configure_governor()
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/io_is_busy", "1");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor", "4");
         sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/down_differential", "10");
-        sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate", "50000");
+        sysfs_write("/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate", "25000");
 
     } else if (strncmp(governor, "interactive", 11) == 0) {
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/min_sample_time", "90000");
+        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/min_sample_time", "60000");
         sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/io_is_busy", "1");
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/hispeed_freq", "1134000");
+        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/hispeed_freq", nom_freq);
         sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay", "30000");
-        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/timer_rate", "30000");
+        sysfs_write("/sys/devices/system/cpu/cpufreq/interactive/timer_rate", "20000");
     }
 }
 
