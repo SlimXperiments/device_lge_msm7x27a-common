@@ -1,6 +1,13 @@
 ifneq ($(BUILD_TINY_ANDROID),true)
 #Compile this library only for builds with the latest modem image
 
+BIT_ENABLED_BOARD_PLATFORM_LIST := msm7630_fusion
+BIT_ENABLED_BOARD_PLATFORM_LIST += msm8660
+BIT_ENABLED_BOARD_PLATFORM_LIST += msm8960
+ifeq ($(call is-board-platform-in-list,$(BIT_ENABLED_BOARD_PLATFORM_LIST)),true)
+FEATURE_GNSS_BIT_API := true
+endif # is-board-platform-in-list
+
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -12,9 +19,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SHARED_LIBRARIES := \
     libutils \
     libcutils \
-    liblog \
-    libgps.utils \
-    libdl
+    libgps.utils
 
 LOCAL_SRC_FILES += \
     loc_eng_log.cpp \
@@ -53,7 +58,6 @@ LOCAL_SHARED_LIBRARIES := \
     libutils \
     libcutils \
     libloc_adapter \
-    liblog \
     libgps.utils
 
 LOCAL_SRC_FILES += \
@@ -64,12 +68,27 @@ LOCAL_SRC_FILES += \
     loc_eng_log.cpp \
     loc_eng_nmea.cpp
 
+ifeq ($(FEATURE_GNSS_BIT_API), true)
+LOCAL_CFLAGS += -DFEATURE_GNSS_BIT_API
+endif # FEATURE_GNSS_BIT_API
+
 LOCAL_SRC_FILES += \
     loc_eng_dmn_conn.cpp \
     loc_eng_dmn_conn_handler.cpp \
     loc_eng_dmn_conn_thread_helper.c \
     loc_eng_dmn_conn_glue_msg.c \
     loc_eng_dmn_conn_glue_pipe.c
+
+# if QMI is supported then link to loc_api_v02
+ifeq ($(call is-board-platform-in-list,$(QMI_BOARD_PLATFORM_LIST)),true)
+LOCAL_SHARED_LIBRARIES += libloc_api_v02
+else
+## Check if RPC is not unsupported
+ifneq ($(TARGET_NO_RPC),true)
+LOCAL_SHARED_LIBRARIES += libloc_api-rpc-qc
+endif #TARGET_NO_RPC
+
+endif #is-board-platform-in-list
 
 LOCAL_CFLAGS += \
      -fno-short-enums \
@@ -95,7 +114,6 @@ LOCAL_SHARED_LIBRARIES := \
     libutils \
     libcutils \
     libloc_eng \
-    liblog \
     libgps.utils \
     libdl
 

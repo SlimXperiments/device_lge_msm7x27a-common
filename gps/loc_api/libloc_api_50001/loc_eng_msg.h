@@ -136,7 +136,6 @@ typedef enum {
 typedef enum {
   LOC_ENG_IF_REQUEST_SENDER_ID_QUIPC = 0,
   LOC_ENG_IF_REQUEST_SENDER_ID_MSAPM,
-  LOC_ENG_IF_REQUEST_SENDER_ID_MSAPU,
   LOC_ENG_IF_REQUEST_SENDER_ID_GPSONE_DAEMON,
   LOC_ENG_IF_REQUEST_SENDER_ID_MODEM,
   LOC_ENG_IF_REQUEST_SENDER_ID_UNKNOWN
@@ -156,16 +155,6 @@ struct loc_eng_msg {
         LOC_LOGV("deleting msg %s", loc_get_msg_name(msgid));
         LOC_LOGV("deleting msg ox%x", msgid);
     }
-};
-
-struct loc_eng_msg_a_glonass_protocol : public loc_eng_msg {
-    const unsigned long a_glonass_protocol;
-    inline loc_eng_msg_a_glonass_protocol(void* instance, unsigned long protocol) :
-        loc_eng_msg(instance, LOC_ENG_MSG_A_GLONASS_PROTOCOL),
-        a_glonass_protocol(protocol)
-        {
-            LOC_LOGV("A-GLONASS protocol: 0x%lx", protocol);
-        }
 };
 
 struct loc_eng_msg_suple_version : public loc_eng_msg {

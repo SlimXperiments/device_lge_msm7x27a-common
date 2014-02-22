@@ -104,8 +104,7 @@ static loc_name_val_s_type loc_eng_msgs[] =
     NAME_VAL( ULP_MSG_INJECT_NETWORK_POSITION ),
     NAME_VAL( ULP_MSG_REPORT_QUIPC_POSITION ),
     NAME_VAL( ULP_MSG_REQUEST_COARSE_POSITION ),
-    NAME_VAL( LOC_ENG_MSG_LPP_CONFIG ),
-    NAME_VAL( LOC_ENG_MSG_A_GLONASS_PROTOCOL )
+    NAME_VAL( LOC_ENG_MSG_LPP_CONFIG )
 };
 static int loc_eng_msgs_num = sizeof(loc_eng_msgs) / sizeof(loc_name_val_s_type);
 
@@ -125,8 +124,7 @@ static loc_name_val_s_type loc_eng_position_modes[] =
     NAME_VAL( LOC_POSITION_MODE_RESERVED_1 ),
     NAME_VAL( LOC_POSITION_MODE_RESERVED_2 ),
     NAME_VAL( LOC_POSITION_MODE_RESERVED_3 ),
-    NAME_VAL( LOC_POSITION_MODE_RESERVED_4 ),
-    NAME_VAL( LOC_POSITION_MODE_RESERVED_5 )
+    NAME_VAL( LOC_POSITION_MODE_RESERVED_4 )
 };
 static int loc_eng_position_mode_num = sizeof(loc_eng_position_modes) / sizeof(loc_name_val_s_type);
 

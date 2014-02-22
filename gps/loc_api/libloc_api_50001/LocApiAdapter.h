@@ -115,8 +115,6 @@ public:
     //LocApiAdapter(int q, reportCb_t[LOC_API_ADAPTER_EVENT_MAX] callbackTable);
     virtual ~LocApiAdapter();
 
-    static LocApiAdapter* getLocApiAdapter(LocEng &locEng);
-
     static int hexcode(char *hexstring, int string_size,
                        const char *data, int data_size);
     static int decodeAddress(char *addr_string, int string_size,
@@ -216,9 +214,6 @@ public:
     inline virtual enum loc_api_adapter_err
         setExtPowerConfig(int isBatteryCharging)
     {LOC_LOGW("%s: default implementation invoked", __func__); return LOC_API_ADAPTER_ERR_SUCCESS;}
-    inline virtual enum loc_api_adapter_err
-        setAGLONASSProtocol(unsigned long aGlonassProtocol)
-    {LOC_LOGW("%s: default implementation invoked", __func__); return LOC_API_ADAPTER_ERR_SUCCESS;}
 
     inline const LocPosMode& getPositionMode() const {return fixCriteria;}
 
@@ -226,8 +221,7 @@ public:
     inline virtual void setInSession(bool inSession) { navigating = inSession; }
 };
 
-extern "C" LocApiAdapter* getLocApiAdapter(LocEng &locEng);
+LocApiAdapter* getLocApiAdapter(LocEng &locEng);
 
-typedef LocApiAdapter* (getLocApiAdapter_t)(LocEng&);
 
 #endif //LOC_API_RPC_ADAPTER_H

@@ -54,8 +54,7 @@ typedef enum loc_position_mode_type {
     LOC_POSITION_MODE_RESERVED_1,
     LOC_POSITION_MODE_RESERVED_2,
     LOC_POSITION_MODE_RESERVED_3,
-    LOC_POSITION_MODE_RESERVED_4,
-    LOC_POSITION_MODE_RESERVED_5
+    LOC_POSITION_MODE_RESERVED_4
 } LocPositionMode;
 
 typedef void (*loc_location_cb_ext) (GpsLocation* location, void* locExt);
