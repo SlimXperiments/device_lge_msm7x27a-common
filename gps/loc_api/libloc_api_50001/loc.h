@@ -54,7 +54,8 @@ typedef enum loc_position_mode_type {
     LOC_POSITION_MODE_RESERVED_1,
     LOC_POSITION_MODE_RESERVED_2,
     LOC_POSITION_MODE_RESERVED_3,
-    LOC_POSITION_MODE_RESERVED_4
+    LOC_POSITION_MODE_RESERVED_4,
+    LOC_POSITION_MODE_RESERVED_5
 } LocPositionMode;
 
 typedef void (*loc_location_cb_ext) (GpsLocation* location, void* locExt);
@@ -72,6 +73,7 @@ typedef struct {
     gps_create_thread create_thread_cb;
     loc_ext_parser location_ext_parser;
     loc_ext_parser sv_ext_parser;
+    gps_request_utc_time request_utc_time_cb;
 } LocCallbacks;
 
 enum loc_sess_status {

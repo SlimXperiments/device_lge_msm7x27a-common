@@ -298,7 +298,7 @@ int loc_eng_init(loc_eng_data_s_type &loc_eng_data, LocCallbacks* callbacks,
     loc_eng_data.nmea_cb      = callbacks->nmea_cb;
     loc_eng_data.acquire_wakelock_cb = callbacks->acquire_wakelock_cb;
     loc_eng_data.release_wakelock_cb = callbacks->release_wakelock_cb;
-
+    loc_eng_data.request_utc_time_cb = callbacks->request_utc_time_cb;
     loc_eng_data.intermediateFix = gps_conf.INTERMEDIATE_POS;
 
     // initial states taken care of by the memset above
@@ -319,7 +319,7 @@ int loc_eng_init(loc_eng_data_s_type &loc_eng_data, LocCallbacks* callbacks,
     LocEng locEngHandle(&loc_eng_data, event, loc_eng_data.acquire_wakelock_cb,
                         loc_eng_data.release_wakelock_cb, loc_eng_msg_sender, loc_external_msg_sender,
                         callbacks->location_ext_parser, callbacks->sv_ext_parser);
-    loc_eng_data.client_handle = getLocApiAdapter(locEngHandle);
+    loc_eng_data.client_handle = LocApiAdapter::getLocApiAdapter(locEngHandle);
 
     int ret_val =-1;
     if (NULL == loc_eng_data.client_handle) {
@@ -536,6 +536,7 @@ static int loc_eng_start_handler(loc_eng_data_s_type &loc_eng_data)
            ret_val == LOC_API_ADAPTER_ERR_ENGINE_DOWN)
        {
            loc_eng_data.client_handle->setInSession(TRUE);
+           loc_inform_gps_status(loc_eng_data, GPS_STATUS_SESSION_BEGIN);
        }
    }
 
@@ -589,8 +590,7 @@ static int loc_eng_stop_handler(loc_eng_data_s_type &loc_eng_data)
    if (loc_eng_data.client_handle->isInSession()) {
 
        ret_val = loc_eng_data.client_handle->stopFix();
-       if (ret_val == LOC_API_ADAPTER_ERR_SUCCESS &&
-           loc_eng_data.fix_session_status != GPS_STATUS_SESSION_BEGIN)
+       if (ret_val == LOC_API_ADAPTER_ERR_SUCCESS)
        {
            loc_inform_gps_status(loc_eng_data, GPS_STATUS_SESSION_END);
        }
@@ -683,7 +683,6 @@ int loc_eng_inject_time(loc_eng_data_s_type &loc_eng_data, GpsUtcTime time,
                                  uncertainty));
     msg_q_snd((void*)((LocEngContext*)(loc_eng_data.context))->deferred_q,
               msg, loc_eng_free_msg);
-
     EXIT_LOG(%d, 0);
     return 0;
 }
@@ -787,14 +786,6 @@ static void loc_inform_gps_status(loc_eng_data_s_type &loc_eng_data, GpsStatusVa
     {
         CALLBACK_LOG_CALLFLOW("status_cb", %s, loc_get_gps_status_name(gs.status));
         loc_eng_data.status_cb(&gs);
-
-        // Restore session begin if needed
-        if (status == GPS_STATUS_ENGINE_ON && last_status == GPS_STATUS_SESSION_BEGIN)
-        {
-            GpsStatus gs_sess_begin = { sizeof(gs_sess_begin),GPS_STATUS_SESSION_BEGIN };
-            CALLBACK_LOG_CALLFLOW("status_cb", %s, loc_get_gps_status_name(gs_sess_begin.status));
-            loc_eng_data.status_cb(&gs_sess_begin);
-        }
     }
 
     last_status = status;
@@ -1689,6 +1680,14 @@ static void loc_eng_deferred_action_thread(void* arg)
             break;
 
         case LOC_ENG_MSG_REQUEST_TIME:
+            if (loc_eng_data_p->request_utc_time_cb != NULL)
+            {
+                loc_eng_data_p->request_utc_time_cb();
+            }
+            else
+            {
+                LOC_LOGE("%s] ERROR: Callback function for request_time is NULL", __func__);
+            }
             break;
 
         case LOC_ENG_MSG_REQUEST_POSITION:

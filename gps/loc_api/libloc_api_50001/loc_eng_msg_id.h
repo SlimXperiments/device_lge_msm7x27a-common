@@ -72,18 +72,18 @@ enum loc_eng_msg_ids_t {
     LOC_ENG_MSG_REPORT_SV,
     LOC_ENG_MSG_REPORT_STATUS,
     LOC_ENG_MSG_REPORT_NMEA,
-    LOC_ENG_MSG_REQUEST_BIT,
-    LOC_ENG_MSG_RELEASE_BIT,
     LOC_ENG_MSG_REQUEST_ATL,
     LOC_ENG_MSG_RELEASE_ATL,
+    LOC_ENG_MSG_REQUEST_BIT,
+    LOC_ENG_MSG_RELEASE_BIT,
     LOC_ENG_MSG_REQUEST_WIFI,
     LOC_ENG_MSG_RELEASE_WIFI,
     LOC_ENG_MSG_REQUEST_NI,
     LOC_ENG_MSG_INFORM_NI_RESPONSE,
     LOC_ENG_MSG_REQUEST_XTRA_DATA,
     LOC_ENG_MSG_REQUEST_TIME,
-    LOC_ENG_MSG_REQUEST_POSITION,
     LOC_ENG_MSG_EXT_POWER_CONFIG,
+    LOC_ENG_MSG_REQUEST_POSITION,
 
     // The following messages are added for ulp
     LOC_ENG_MSG_REQUEST_PHONE_CONTEXT,
@@ -124,6 +124,12 @@ enum loc_eng_msg_ids_t {
     /* Message is sent by HAL to LOC API to configure LTE Positioning
        Profile in modem */
     LOC_ENG_MSG_LPP_CONFIG,
+
+    LOC_ENG_MSG_AGPS_MODE,
+    LOC_ENG_MSG_XTRA_ENABLE,
+    LOC_ENG_MSG_GLONASS_CONTROL,
+    LOC_ENG_MSG_USE_SSL,
+    LOC_ENG_MSG_CERT_TYPE,
 
     // Message is sent by Android framework (GpsLocationProvider)
     // to inject the raw command
