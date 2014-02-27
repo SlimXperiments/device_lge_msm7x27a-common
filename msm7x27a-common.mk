@@ -169,7 +169,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     hwui.render_dirty_regions=true \
     ro.max.fling_velocity=4000 \
     debug.gr.numframebuffers=3 \
-    ro.bq.gpu_to_cpu_unsupported=1 \
     dalvik.vm.dexopt-data-only=1 \
     ro.fuse_sdcard=true \
     debug.gralloc.map_fb_memory=true
