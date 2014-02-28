@@ -129,9 +129,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
         DEVICE_PROVISIONED=1 \
         keyguard.no_require_sim=1 
 
+ifeq ($(TARGET_BUILD_VARIANT),eng)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.strictmode.visual=0 \
     persist.sys.strictmode.disable=1
+endif
 
 # Common properties
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -142,8 +144,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     com.qc.hardware=true \
     hwui.render_dirty_regions=false \
     wifi.interface=wlan0 \
-    ro.adb.secure=0 \
-    persist.sys.usb.config=mtp,adb \
     persist.service.adb.enable=1 \
     hwui.render_dirty_regions=true \
     ro.max.fling_velocity=4000 \
@@ -151,6 +151,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.dexopt-data-only=1 \
     ro.fuse_sdcard=true \
     debug.gralloc.map_fb_memory=true
+
+ifeq ($(TARGET_BUILD_VARIANT),userdebug)
+ADDITIONAL_DEFAULT_PROPERTIES += \
+    ro.secure=0
+endif
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.usb.config=mtp
 
 PRODUCT_PROPERTY_OVERRIDES += \
    media.stagefright.enable-player=true \
