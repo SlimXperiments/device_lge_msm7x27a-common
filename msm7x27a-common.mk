@@ -71,7 +71,8 @@ PRODUCT_PACKAGES += \
 # Gps hal
 PRODUCT_PACKAGES += \
     gps.msm7x27a \
-    gps.conf
+    gps.conf \
+    sap.conf
 
 PRODUCT_PACKAGES += \
     power.msm7x27a
@@ -109,6 +110,11 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     libQWiFiSoftApCfg
+
+ifeq ($(WITH_QC_PERF),true)
+PRODUCT_PACKAGES += \
+    libloc_api-rpc-qc
+endif
 
 # Do not power down SIM card when modem is sent to Low Power Mode.
 PRODUCT_PROPERTY_OVERRIDES += \
