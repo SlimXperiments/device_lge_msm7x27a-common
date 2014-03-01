@@ -34,15 +34,13 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
 
 PRODUCT_PACKAGES += \
-    lgapversion
-
-PRODUCT_PACKAGES += \
     init.lge-shared.rc \
     init.target.rc \
     init.lge.usb.rc \
     init.qcom.post_boot.sh \
     init.qcom.efs.sync.sh \
-    init.lge.target.sh
+    init.lge.target.sh \
+    init.qcom.baseband.sh 
 
 # Wifi
 PRODUCT_COPY_FILES += \
