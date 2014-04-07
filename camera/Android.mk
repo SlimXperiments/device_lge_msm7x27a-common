@@ -59,7 +59,7 @@ LOCAL_SHARED_LIBRARIES += libmmcamera_interface2
 
 LOCAL_SHARED_LIBRARIES+= libbinder libhardware
 
-      LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/socket.h
+      LOCAL_CFLAGS += -include bionic/libc/kernel/uapi/linux/socket.h
 
 ifeq ($(DLOPEN_LIBMMCAMERA),1)
     LOCAL_SHARED_LIBRARIES += libdl

@@ -27,10 +27,10 @@ LOCAL_C_INCLUDES+= $(LOCAL_PATH)/..
 LOCAL_C_INCLUDES+= $(LOCAL_PATH)/../inc
 LOCAL_C_INCLUDES+= hardware/qcom/media-$(TARGET_QCOM_MEDIA_VARIANT)/mm-core/inc
 
-LOCAL_CFLAGS += -include bionic/libc/kernel/arch-arm/asm/posix_types.h
-LOCAL_CFLAGS += -include bionic/libc/kernel/arch-arm/asm/byteorder.h
-LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/posix_types.h
-LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/types.h
+LOCAL_CFLAGS += -include bionic/libc/kernel/uapi/asm-arm/asm/posix_types.h
+LOCAL_CFLAGS += -include bionic/libc/kernel/uapi/asm-arm/asm/byteorder.h
+LOCAL_CFLAGS += -include bionic/libc/kernel/uapi/linux/posix_types.h
+LOCAL_CFLAGS += -include bionic/libc/kernel/uapi/linux/types.h
 LOCAL_CFLAGS += -include bionic/libc/include/sys/socket.h
 LOCAL_CFLAGS += -include bionic/libc/include/netinet/in.h
 LOCAL_CFLAGS += -include bionic/libc/include/sys/un.h
