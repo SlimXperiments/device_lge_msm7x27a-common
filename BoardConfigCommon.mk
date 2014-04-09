@@ -79,6 +79,8 @@ USE_DEVICE_SPECIFIC_CAMERA := true
 
 BOARD_HAL_STATIC_LIBRARIES := libhealthd.msm7x27a
 
+TARGET_NO_INITLOGO := true
+
 BOARD_HAS_QCOM_WLAN              := true
 BOARD_HAS_QCOM_WLAN_SDK          := true
 BOARD_WLAN_DEVICE                := qcwcn
